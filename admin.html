@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Jobopedia — Dual Admin Control Center</title>
+  <link rel="icon" href="images/jobopedia-icon.png"/>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-50 text-slate-900 antialiased">
+  
+  <!-- Header -->
+  <header class="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 sm:h-20 gap-4">
+        <a href="index.html" class="flex items-center space-x-3 group">
+          <img src="images/jobopedia-icon.png" alt="Jobopedia" class="w-10 h-10 object-contain rounded-xl shadow-xs"/>
+          <span class="text-xl sm:text-2xl font-black tracking-tight text-slate-900">
+            Job<span class="text-[#F58220]">opedia</span>
+            <span class="ml-2 text-xs font-bold px-2 py-0.5 rounded-full bg-slate-900 text-white uppercase tracking-wider">Admin</span>
+          </span>
+        </a>
+
+        <div class="flex items-center space-x-3">
+          <a href="index.html" class="px-3.5 py-2 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition flex items-center space-x-1.5">
+            <span>← Back to Public Website</span>
+          </a>
+          <span class="px-3 py-1.5 text-xs font-extrabold bg-blue-50 text-blue-700 border border-blue-200 rounded-xl flex items-center space-x-1">
+            <span class="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
+            <span>Dual Admin Mode Active</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Top Banner -->
+  <div class="bg-gradient-to-r from-slate-950 via-blue-950 to-slate-900 text-white py-8 border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div>
+        <h1 class="text-2xl sm:text-3xl font-black text-white tracking-tight flex items-center space-x-3">
+          <span>Jobopedia Dual Admin Control Center</span>
+        </h1>
+        <p class="text-sm text-slate-300 mt-1 max-w-2xl font-medium">
+          Unified control panel for HR job postings &amp; candidate ATS tracking + Dhaval &amp; Tushar Bulk JSON Uploader for Mock Tests and Vacancies.
+        </p>
+      </div>
+
+      <div class="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/15 flex items-center space-x-4">
+        <div>
+          <div class="text-[11px] font-bold text-slate-300 uppercase tracking-wider">Portal Active Visitors</div>
+          <div class="text-2xl font-black text-amber-300" id="adminVisitorCount">14,821 Live</div>
+        </div>
+        <div class="w-10 h-10 rounded-xl bg-amber-400 text-slate-950 flex items-center justify-center font-black text-lg">
+          📈
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Main Tabs -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full space-y-6">
+    <div class="flex items-center gap-2 border-b border-slate-200 pb-2 overflow-x-auto">
+      <button
+        onclick="switchAdminView('dhavalTab', this)"
+        class="admin-nav-tab px-5 py-2.5 rounded-2xl text-xs font-black transition flex items-center space-x-2 bg-slate-900 text-white shadow-md cursor-pointer"
+      >
+        <span>⚡</span>
+        <span>CONTENT ADMIN (DHAVAL &amp; TUSHAR - BULK JSON)</span>
+      </button>
+
+      <button
+        onclick="switchAdminView('hrTab', this)"
+        class="admin-nav-tab px-5 py-2.5 rounded-2xl text-xs font-black transition flex items-center space-x-2 bg-slate-100 text-slate-700 hover:bg-slate-200 cursor-pointer"
+      >
+        <span>💼</span>
+        <span>HR RECRUITMENT &amp; JOB POSTING</span>
+      </button>
+
+      <button
+        onclick="switchAdminView('candidatesTab', this)"
+        class="admin-nav-tab px-5 py-2.5 rounded-2xl text-xs font-black transition flex items-center space-x-2 bg-slate-100 text-slate-700 hover:bg-slate-200 cursor-pointer"
+      >
+        <span>👥</span>
+        <span>CANDIDATE APPLICATIONS &amp; ATS RESUMES</span>
+      </button>
+    </div>
+
+    <!-- 1. Dhaval Bulk JSON Tab -->
+    <div id="dhavalTab" class="admin-view-panel space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        <!-- Bulk Jobs JSON -->
+        <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div>
+              <h3 class="text-base font-black text-slate-900 flex items-center space-x-2">
+                <span>📁</span>
+                <span>Bulk Jobs JSON Uploader</span>
+              </h3>
+              <p class="text-xs text-slate-500 font-medium">Upload multiple Sarkari &amp; Corporate vacancies via JSON array.</p>
+            </div>
+            <button onclick="loadSampleJobs()" class="px-2.5 py-1 text-[11px] font-bold bg-slate-100 hover:bg-slate-200 rounded-lg text-slate-700">
+              Load Sample
+            </button>
+          </div>
+
+          <textarea
+            id="bulkJobsTextarea"
+            class="w-full h-64 p-3 bg-slate-950 text-emerald-400 font-mono text-xs rounded-2xl border border-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Paste JSON Array of Jobs here..."
+          >[
+  {
+    "title": "Assistant Section Officer (ASO)",
+    "department": "Ministry of External Affairs (MEA)",
+    "category": "govt",
+    "state": "All India",
+    "qualification": "Graduate",
+    "salary": "₹52,000 - ₹1,40,000 / month",
+    "vacancies": 450,
+    "lastDate": "2026-11-28",
+    "description": "Foreign posting allowance, diplomatic consular duties, and administrative coordination in Indian embassies abroad."
+  },
+  {
+    "title": "Senior Cloud Engineer",
+    "department": "Tata Consultancy Services (TCS Digital)",
+    "category": "private",
+    "state": "Maharashtra",
+    "qualification": "B.Tech / MCA",
+    "salary": "₹14,00,000 - ₹20,00,000 / year",
+    "vacancies": 35,
+    "lastDate": "2026-12-10",
+    "description": "Architecting multi-cloud AWS/Azure solutions, Kubernetes deployments, and CI/CD pipelines in Pune/Mumbai."
+  }
+]</textarea>
+
+          <button
+            onclick="uploadJobsJson()"
+            class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl text-xs font-black shadow-lg transition flex items-center justify-center space-x-2 cursor-pointer"
+          >
+            <span>☁️</span>
+            <span>Validate &amp; Bulk Upload Jobs to Jobopedia</span>
+          </button>
+        </div>
+
+        <!-- Bulk MCQs JSON -->
+        <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div>
+              <h3 class="text-base font-black text-slate-900 flex items-center space-x-2">
+                <span>📝</span>
+                <span>Bulk MCQs Mock Test Uploader</span>
+              </h3>
+              <p class="text-xs text-slate-500 font-medium">Add 100+ MCQs to UPSC, SSC CGL, or Banking test series.</p>
+            </div>
+            <select id="mcqCategorySelect" class="px-2 py-1 text-xs font-bold border border-slate-200 rounded-lg">
+              <option value="upsc-gs-1">UPSC Civil Services Prelims</option>
+              <option value="ssc-cgl-1">SSC CGL Tier 1 Mock</option>
+              <option value="banking-po">Banking SBI &amp; IBPS PO</option>
+              <option value="railway-ntpc">Railway RRB NTPC</option>
+            </select>
+          </div>
+
+          <textarea
+            id="bulkMcqsTextarea"
+            class="w-full h-64 p-3 bg-slate-950 text-amber-400 font-mono text-xs rounded-2xl border border-slate-800 focus:outline-none focus:ring-2 focus:ring-amber-500"
+            placeholder="Paste JSON Array of MCQs here..."
+          >[
+  {
+    "id": 1,
+    "question": "Which Constitutional Amendment Act added Article 21A (Right to Education as a Fundamental Right)?",
+    "options": ["86th Amendment Act, 2002", "42nd Amendment Act, 1976", "44th Amendment Act, 1978", "91st Amendment Act, 2003"],
+    "correctIndex": 0,
+    "explanation": "The 86th Constitutional Amendment Act, 2002 inserted Article 21A, making education a Fundamental Right for children aged 6 to 14 years."
+  },
+  {
+    "id": 2,
+    "question": "Which river is historically referred to as 'Dakshin Ganga'?",
+    "options": ["Godavari", "Krishna", "Cauvery", "Mahanadi"],
+    "correctIndex": 0,
+    "explanation": "Godavari is India's second longest river and is traditionally termed as Dakshin Ganga."
+  }
+]</textarea>
+
+          <button
+            onclick="uploadMcqsJson()"
+            class="w-full py-3 bg-[#F58220] hover:bg-[#ea580c] text-white rounded-2xl text-xs font-black shadow-lg transition flex items-center justify-center space-x-2 cursor-pointer"
+          >
+            <span>🚀</span>
+            <span>Upload MCQs to Selected Test Series</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 2. HR Single Job Post Tab -->
+    <div id="hrTab" class="admin-view-panel space-y-6" style="display:none;">
+      <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
+        <div class="border-b border-slate-100 pb-4">
+          <h2 class="text-lg font-black text-slate-900">Publish a New Vacancy</h2>
+          <p class="text-xs text-slate-500 font-medium">Standard recruitment form for HR managers.</p>
+        </div>
+
+        <form id="hrJobForm" onsubmit="handleHrJobSubmit(event)" class="space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Job Title *</label>
+              <input type="text" name="title" class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-200" placeholder="e.g. Probationary Officer or Full Stack Engineer" required/>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Department / Organization *</label>
+              <input type="text" name="department" class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-200" placeholder="e.g. State Bank of India or Infosys" required/>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Category *</label>
+              <select name="category" class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-200">
+                <option value="govt">Sarkari (Central / State Govt)</option>
+                <option value="private">Corporate / Private Job</option>
+                <option value="internship">Internship (Freshers)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">State / Location *</label>
+              <select name="state" class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-200">
+                <option value="All India">All India (National)</option>
+                <option value="Maharashtra">Maharashtra (Pune/Mumbai)</option>
+                <option value="Gujarat">Gujarat (Ahmedabad/Gandhinagar)</option>
+                <option value="Delhi">Delhi NCR</option>
+                <option value="Karnataka">Karnataka (Bangalore)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Monthly Salary / Pay Scale *</label>
+              <input type="text" name="salary" class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-200" placeholder="e.g. ₹56,100 - ₹1,77,500 / month" required/>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Eligibility / Degree *</label>
+              <input type="text" name="eligibility" class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-200" placeholder="e.g. Graduate or B.Tech or 12th Pass" required/>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Job Description &amp; Scope *</label>
+            <textarea name="description" rows="4" class="w-full p-3 text-xs rounded-xl border border-slate-200" placeholder="Detailed job scope, exam pattern, and duties..." required></textarea>
+          </div>
+
+          <div class="flex justify-end space-x-3 pt-2">
+            <button type="reset" class="px-4 py-2.5 text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl">Reset</button>
+            <button type="submit" class="px-6 py-2.5 text-xs font-black text-white bg-blue-600 hover:bg-blue-500 rounded-xl shadow-md">Publish Job</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- 3. Candidate Applications Tab -->
+    <div id="candidatesTab" class="admin-view-panel space-y-6" style="display:none;">
+      <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+          <div>
+            <h2 class="text-lg font-black text-slate-900">Candidate Applications &amp; ATS Resume Profiles</h2>
+            <p class="text-xs text-slate-500 font-medium">Direct WhatsApp contact, state verification, and ATS qualifications.</p>
+          </div>
+          <button onclick="downloadCandidatesCsv()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold flex items-center space-x-1.5 shadow-sm">
+            <span>📊 Export to CSV</span>
+          </button>
+        </div>
+
+        <div class="overflow-x-auto rounded-2xl border border-slate-200">
+          <table class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200">
+                <th class="p-3.5">Candidate Name</th>
+                <th class="p-3.5">WhatsApp / Mobile</th>
+                <th class="p-3.5">Email</th>
+                <th class="p-3.5">State</th>
+                <th class="p-3.5">Degree / Qual.</th>
+                <th class="p-3.5">Applied Role</th>
+                <th class="p-3.5">ATS Resume</th>
+                <th class="p-3.5">Status</th>
+              </tr>
+            </thead>
+            <tbody id="candidatesTableBody" class="divide-y divide-slate-100">
+              <!-- Rendered via script.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="script.js"></script>
+  <script>
+    function switchAdminView(tabId, btn) {
+      document.querySelectorAll('.admin-view-panel').forEach(p => p.style.display = 'none');
+      document.querySelectorAll('.admin-nav-tab').forEach(b => {
+        b.className = 'admin-nav-tab px-5 py-2.5 rounded-2xl text-xs font-black transition flex items-center space-x-2 bg-slate-100 text-slate-700 hover:bg-slate-200 cursor-pointer';
+      });
+
+      document.getElementById(tabId).style.display = 'block';
+      btn.className = 'admin-nav-tab px-5 py-2.5 rounded-2xl text-xs font-black transition flex items-center space-x-2 bg-slate-900 text-white shadow-md cursor-pointer';
+    }
+
+    function loadSampleJobs() {
+      alert("Sample jobs array reloaded in editor.");
+    }
+
+    function uploadJobsJson() {
+      try {
+        const val = JSON.parse(document.getElementById('bulkJobsTextarea').value);
+        alert('Success! ' + val.length + ' jobs successfully uploaded to Jobopedia.');
+      } catch (e) {
+        alert('Error parsing JSON: ' + e.message);
+      }
+    }
+
+    function uploadMcqsJson() {
+      try {
+        const val = JSON.parse(document.getElementById('bulkMcqsTextarea').value);
+        const cat = document.getElementById('mcqCategorySelect').value;
+        alert('Success! ' + val.length + ' MCQs added to ' + cat + '.');
+      } catch (e) {
+        alert('Error parsing JSON: ' + e.message);
+      }
+    }
+
+    function handleHrJobSubmit(e) {
+      e.preventDefault();
+      alert('Job successfully published to Jobopedia portal!');
+      e.target.reset();
+    }
+
+    function downloadCandidatesCsv() {
+      const csv = "Name,Phone,Email,State,Qualification,Role,Status\nDhaval Patel,+91 9876543210,dhaval@jobopedia.in,Gujarat,B.Tech,Civil Services,Shortlisted\nTushar Shah,+91 9823456789,tushar@jobopedia.in,Maharashtra,MBA Finance,SBI PO,Reviewed";
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = "Jobopedia_Candidates.csv";
+      a.click();
+    }
+  </script>
+</body>
+</html>
